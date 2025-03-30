@@ -31,6 +31,8 @@ const UpdateEvent = ({ selectedEvent, setEventAction }) => {
           </label>
           <NextInput
             id="eventName"
+            name="eventName"
+            aria-label="Event Name"
             value={form.eventName}
             placeholder="Enter Event Name..."
             className="border-2 border-black focus:outline-none p-2 w-full"
@@ -43,6 +45,8 @@ const UpdateEvent = ({ selectedEvent, setEventAction }) => {
           </label>
           <NextInput
             id="eventLocation"
+            name="eventLocation"
+            aria-label="Event Location"
             value={form.eventLocation}
             placeholder="Enter Event Location..."
             className="border-2 border-black focus:outline-none p-2 w-full"
@@ -57,6 +61,8 @@ const UpdateEvent = ({ selectedEvent, setEventAction }) => {
           </label>
           <NextDateTime
             id="eventDateTime"
+            name="eventDateTime"
+            aria-label="Event Date and Time"
             type="datetime-local"
             value={
               form.eventDateTime

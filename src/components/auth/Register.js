@@ -3,6 +3,7 @@ import { registerUser } from "@/redux/actions/authActions";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import NextButton from "../helper/NextButton";
+import { NextInput } from "..";
 
 export default function RegisterComponent({ dispatch, loading, setIsLogin }) {
   const [form, setForm] = useState({
@@ -22,22 +23,28 @@ export default function RegisterComponent({ dispatch, loading, setIsLogin }) {
       <div className="flex flex-col gap-2 w-1/2">
         <h2 className="text-xl font-bold">Register</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
+          <NextInput
             type="fullName"
-            placeholder="Full Name"
+            name="fullName"
+            placeholder="Enter Full Name"
+            aria-label="Full Name"
             className="border p-2 w-full"
             onChange={(e) => setForm({ ...form, fullName: e.target.value })}
           />
-          <input
-            type="username"
-            placeholder="Username"
+          <NextInput
+            type="text"
+            name="username"
+            placeholder="Enter username"
+            aria-label="Username"
             className="border p-2 w-full"
             onChange={(e) => setForm({ ...form, username: e.target.value })}
           />
           <div className="relative">
-            <input
+            <NextInput
               type={showPassword ? "text" : "password"}
-              placeholder="Password"
+              name="password"
+              placeholder="Enter password"
+              aria-label="Password"
               className="border p-2 w-full"
               onChange={(e) => setForm({ ...form, password: e.target.value })}
             />

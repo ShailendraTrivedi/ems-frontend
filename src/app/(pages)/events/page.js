@@ -1,5 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useRouter, useSearchParams } from "next/navigation";
+import Cookies from "js-cookie";
+import Head from "next/head";
 import {
   CreateEvent,
   EventTable,
@@ -13,17 +18,13 @@ import {
   fetchEvents,
 } from "@/redux/actions/eventActions";
 import { EventAction } from "@/utils/constants";
-import Cookies from "js-cookie";
 import { Plus } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 
 export default function Events() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const useEvent = useSelector((state) => state.events);
+  const eventState = useSelector((state) => state.events);
 
   const [payload, setPayload] = useState({
     pageNo: parseInt(searchParams.get("page")) || 1,
@@ -31,67 +32,57 @@ export default function Events() {
   });
 
   const [selectedEvent, setSelectedEvent] = useState(null);
-  const [eventAction, setEventAction] = useState("display");
-  const [eventState, setEventState] = useState({
-    loading: "",
-    error: "",
-    events: [],
-    total: 0,
-  });
+  const [eventAction, setEventAction] = useState(EventAction.DISPLAY);
 
   useEffect(() => {
-    const isToken = Cookies.get("token");
-    if (isToken) {
-      const params = new URLSearchParams();
-      params.set("page", payload.pageNo);
-      params.set("limit", payload.limit);
+    document.title = `${eventAction.toUpperCase()} | Event Management`;
+  }, [eventAction]);
+
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      const params = new URLSearchParams({
+        page: payload.pageNo,
+        limit: payload.limit,
+      });
       router.push(`?${params.toString()}`);
       dispatch(fetchEvents(payload));
     }
   }, [dispatch, router, payload]);
 
-  useEffect(() => {
-    setEventState(useEvent);
-  }, [useEvent]);
-
-  const handleInterested = (event) => {
-    dispatch(esvpEvent(event));
-  };
-
-  const handleUpdate = (event) => {
-    setEventAction(EventAction.UPDATE);
+  const handleEventAction = (action, event = null) => {
+    setEventAction(action);
     setSelectedEvent(event);
   };
 
-  const handleDelete = (event) => {
-    dispatch(deleteEvent(event));
-  };
-
-  const renderComponent = () => {
-    switch (eventAction) {
-      case EventAction.CREATE:
-        return <CreateEvent setEventAction={setEventAction} />;
-      case EventAction.UPDATE:
-        return (
-          <UpdateEvent
-            selectedEvent={selectedEvent}
-            setEventAction={setEventAction}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <div className="w-full h-full">
-      {eventAction !== EventAction.DISPLAY && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-10">
-          {renderComponent()}
-        </div>
-      )}
-      <div className="p-5">
-        <div className="flex justify-between p-5">
+    <>
+      <Head>
+        <title>Manage Events | Event Management System</title>
+        <meta
+          name="description"
+          content="Create, update, and manage events effortlessly."
+        />
+        <meta property="og:title" content="Event Management System" />
+        <meta
+          property="og:description"
+          content="Effortlessly manage your events with our platform."
+        />
+      </Head>
+      <main className="w-full h-full p-5">
+        {eventAction !== EventAction.DISPLAY && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-10">
+            {eventAction === EventAction.CREATE ? (
+              <CreateEvent setEventAction={setEventAction} />
+            ) : (
+              <UpdateEvent
+                selectedEvent={selectedEvent}
+                setEventAction={setEventAction}
+              />
+            )}
+          </div>
+        )}
+
+        <div className="flex justify-between items-center p-5">
           <div className="flex gap-2 items-center">
             <label htmlFor="totalEvent" className="text-xl font-bold">
               Total Events:
@@ -105,21 +96,24 @@ export default function Events() {
           </div>
           <NextButton
             className="flex gap-2 items-center bg-blue-500 text-white p-2 rounded-md"
-            onClick={() => setEventAction(EventAction.CREATE)}
+            onClick={() => handleEventAction(EventAction.CREATE)}
           >
             <Plus />
             Create New Event
           </NextButton>
         </div>
+
         {eventState.loading ? (
-          <p>Loading events...</p>
+          <p className="text-center">Loading events...</p>
         ) : (
           <>
             <EventTable
               events={eventState.events}
-              handleInterested={handleInterested}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
+              handleInterested={(event) => dispatch(esvpEvent(event))}
+              handleUpdate={(event) =>
+                handleEventAction(EventAction.UPDATE, event)
+              }
+              handleDelete={(event) => dispatch(deleteEvent(event))}
             />
             <Pagination
               totalEvents={eventState.total}
@@ -128,7 +122,7 @@ export default function Events() {
             />
           </>
         )}
-      </div>
-    </div>
+      </main>
+    </>
   );
 }

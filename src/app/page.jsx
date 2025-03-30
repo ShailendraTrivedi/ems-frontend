@@ -1,6 +1,6 @@
 export default function Home() {
   return (
-    <div className="flex flex-col gap-5 items-center justify-center h-screen text-3xl">
+    <div className="flex flex-col gap-5 items-center justify-center h-full text-3xl">
       <h3 className="text-5xl text-blue-500 font-bold">
         Event Management System
       </h3>

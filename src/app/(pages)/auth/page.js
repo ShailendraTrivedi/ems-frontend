@@ -4,12 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { LoginComponent, RegisterComponent } from "@/components";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import Head from "next/head";
 
 export default function Auth() {
   const router = useRouter();
   const dispatch = useDispatch();
   const useAuth = useSelector((state) => state.auth);
   const [isLogin, setIsLogin] = useState(true);
+
+  useEffect(() => {
+    document.title = isLogin
+      ? "Login | Event Management"
+      : "Register | Event Management";
+  }, [isLogin]);
 
   useEffect(() => {
     if (useAuth?.token) {
@@ -21,7 +28,29 @@ export default function Auth() {
 
   return (
     <>
-      <div className="grid grid-cols-2 w-full h-full">
+      <Head>
+        <title>
+          {isLogin ? "Login | Event Management" : "Register | Event Management"}
+        </title>
+        <meta
+          name="description"
+          content="Securely log in or register to manage your events effortlessly."
+        />
+        <meta
+          property="og:title"
+          content={
+            isLogin
+              ? "Login to Event Management System"
+              : "Register for Event Management System"
+          }
+        />
+        <meta
+          property="og:description"
+          content="Join our platform to organize and manage events seamlessly."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+      <main className="grid grid-cols-2 w-full h-full">
         <div
           className={`absolute top-0 left-0 transform ${
             isLogin ? "translate-x-[100%]" : "translate-x-[0%]"
@@ -39,7 +68,7 @@ export default function Auth() {
           loading={useAuth.loading}
           setIsLogin={setIsLogin}
         />
-      </div>
+      </main>
     </>
   );
 }
