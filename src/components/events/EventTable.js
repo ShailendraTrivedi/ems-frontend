@@ -1,6 +1,7 @@
 import React from "react";
 import NextButton from "../helper/NextButton";
 import { SquarePen, Trash2 } from "lucide-react";
+import { dateFormat } from "@/utils/constants";
 
 const EventTable = ({
   events,
@@ -41,7 +42,7 @@ const EventTable = ({
                     {event.eventLocation}
                   </td>
                   <td className="border-b-2 border-blue-300 px-4 py-2 text-center">
-                    {new Date(event.eventDateTime).toLocaleDateString()}
+                    {dateFormat(event.eventDateTime)}
                   </td>
                   <td className="border-b-2 border-blue-300 px-4 py-2 text-center">
                     {event.users?.length}

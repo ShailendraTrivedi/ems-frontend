@@ -15,7 +15,6 @@ export default function Auth() {
     if (useAuth?.token) {
       router.push("/events");
     } else if (useAuth?.error) {
-      console.log({ error: useAuth.error });
       toast.error(useAuth?.error);
     }
   }, [useAuth, router]);

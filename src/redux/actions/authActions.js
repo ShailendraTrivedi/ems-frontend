@@ -13,6 +13,7 @@ export const loginUser = createAsyncThunk(
         localStorage.setItem("userId", response.data.data.user.userID);
         localStorage.setItem("username", response.data.data.user.username);
         return {
+          username: response.data.data.user.username,
           token: response.data.data.jwtToken,
         };
       }
@@ -32,6 +33,7 @@ export const registerUser = createAsyncThunk(
         localStorage.setItem("userId", response.data.data.user.userID);
         localStorage.setItem("username", response.data.data.user.username);
         return {
+          username: response.data.data.user.username,
           token: response.data.data.jwtToken,
         };
       }

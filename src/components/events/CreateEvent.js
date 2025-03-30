@@ -61,6 +61,7 @@ const CreateEvent = ({ setEventAction }) => {
             value={form.eventDateTime}
             placeholder="Enter Event Date and Time..."
             className="border-2 border-black focus:outline-none p-2 w-full"
+            min={new Date().toISOString().slice(0, 16)}
             onChange={(e) =>
               setForm({ ...form, eventDateTime: e.target.value })
             }

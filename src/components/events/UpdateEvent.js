@@ -58,7 +58,11 @@ const UpdateEvent = ({ selectedEvent, setEventAction }) => {
           <NextDateTime
             id="eventDateTime"
             type="datetime-local"
-            value={form.eventDateTime}
+            value={
+              form.eventDateTime
+                ? new Date(form.eventDateTime).toISOString().slice(0, 16)
+                : ""
+            }
             placeholder="Enter Event Date and Time..."
             className="border-2 border-black focus:outline-none p-2 w-full"
             onChange={(e) =>

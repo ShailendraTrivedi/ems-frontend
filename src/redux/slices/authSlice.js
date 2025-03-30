@@ -4,17 +4,22 @@ import Cookies from "js-cookie";
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { token: null, loading: false, error: null },
+  initialState: { username: null, token: null, loading: false, error: null },
   reducers: {
     logout: (state) => {
+      state.username = null;
       state.token = null;
+      state.loading = false;
+      state.error = null;
       Cookies.remove("token");
-      localStorage.removeItem("username");
+      localStorage.clear();
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
+        state.username = null;
+        state.token = null;
         state.loading = true;
         state.error = null;
       })
@@ -27,6 +32,8 @@ const authSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(registerUser.pending, (state) => {
+        state.username = null;
+        state.token = null;
         state.loading = true;
         state.error = null;
       })

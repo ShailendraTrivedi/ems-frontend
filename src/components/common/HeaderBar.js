@@ -2,9 +2,13 @@
 
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 export default function HeaderBar() {
-  const [username] = useState(localStorage.getItem("username") || "user");
+  const useAuth = useSelector((state) => state.auth);
+  const [username] = useState(
+    useAuth?.username || localStorage.getItem("username")
+  );
   const pathname = usePathname();
   const hiddenPaths = ["/auth"];
 
