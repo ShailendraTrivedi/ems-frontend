@@ -6,9 +6,7 @@ import { useSelector } from "react-redux";
 
 export default function HeaderBar() {
   const useAuth = useSelector((state) => state.auth);
-  const [username] = useState(
-    useAuth?.username || localStorage.getItem("username")
-  );
+  const username = useAuth?.username || localStorage.getItem("username");
   const pathname = usePathname();
   const hiddenPaths = ["/auth"];
 
